@@ -1,7 +1,7 @@
 node ('master')
  {
   
-  def mavenHome = tool name: "maven3.6.2"
+    def maven = tool name: "maven-3.6.3"
   
       echo "GitHub BranhName ${env.BRANCH_NAME}"
       echo "Jenkins Job Number ${env.BUILD_NUMBER}"
@@ -11,17 +11,29 @@ node ('master')
       echo "Jenkins URL ${env.JENKINS_URL}"
       echo "JOB Name ${env.JOB_NAME}"
   
-   properties([[$class: 'JiraProjectProperty'], buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '2', daysToKeepStr: '', numToKeepStr: '2')), pipelineTriggers([pollSCM('* * * * *')])])
+   properties([[$class: 'JiraProjectProperty'], buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '2', daysToKeepStr: '', numToKeepStr: '2')), pipelineTriggers([githubPush()])])
   
-  stage("CheckOutCodeGit")
-  {
-   git branch: 'development', credentialsId: '65fb834f-a83b-4fe7-8e11-686245c47a65', url: 'https://github.com/MithunTechnologiesDevOps/maven-web-application.git'
- }
- 
- stage("Build")
- {
- sh "${mavenHome}/bin/mvn clean package"
- }
+    stage('SCM'){
+        git branch: 'dev', credentialsId: '3137dfee-c53a-40b6-a42c-c5c9ad467f1b', url: 'https://github.com/sanjeethmallesh/maven-web-application.git'
+    }
+    
+    stage('BUILD'){
+        sh "${maven}/bin/mvn clean package"
+    }
+    
+    stage('SONAR'){
+        sh "${maven}/bin/mvn sonar:sonar"
+    }
+    
+    stage('ARTIFACT'){
+        sh "${maven}/bin/mvn deploy"
+    }
+    
+    stage('DEPLOY'){
+        sshagent(['881b1f67-af1a-4b09-b79b-6b82c3d4ce48']) {
+            sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@54.159.147.43:/usr/local/tomcat9/webapps/"
+        }
+    }
  
   /*
  stage("ExecuteSonarQubeReport")

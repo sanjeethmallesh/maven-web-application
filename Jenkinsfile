@@ -1,4 +1,4 @@
-node ('linux-slave')
+node ('master')
  {
   
     def maven = tool name: "maven-3.6.3"

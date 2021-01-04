@@ -1,4 +1,4 @@
-node ('master')
+node ('linux-slave')
  {
   
     def maven = tool name: "maven-3.6.3"
@@ -11,7 +11,7 @@ node ('master')
       echo "Jenkins URL ${env.JENKINS_URL}"
       echo "JOB Name ${env.JOB_NAME}"
   
-   properties([ buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '2', daysToKeepStr: '', numToKeepStr: '2')), pipelineTriggers([githubPush()])])
+   properties([ buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '10', daysToKeepStr: '', numToKeepStr: '10')), pipelineTriggers([githubPush()])])
   
     stage('SCM'){
         git branch: 'dev', credentialsId: '3137dfee-c53a-40b6-a42c-c5c9ad467f1b', url: 'https://github.com/sanjeethmallesh/maven-web-application.git'

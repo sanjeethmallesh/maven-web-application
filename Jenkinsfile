@@ -24,11 +24,11 @@ node ('linux-slave')
     stage('SONAR'){
         sh "${maven}/bin/mvn sonar:sonar"
     }
-    /*
+    
     stage('ARTIFACT'){
         sh "${maven}/bin/mvn deploy"
     }
-    */
+    
     stage('DEPLOY'){
         sshagent(['881b1f67-af1a-4b09-b79b-6b82c3d4ce48']) {
             sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@184.72.100.178:/usr/local/tomcat9/webapps/"

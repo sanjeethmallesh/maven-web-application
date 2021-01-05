@@ -31,7 +31,7 @@ node ('linux-slave')
     
     stage('DEPLOY'){
         sshagent(['881b1f67-af1a-4b09-b79b-6b82c3d4ce48']) {
-            sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@184.72.100.178:/usr/local/tomcat9/webapps/"
+            sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@3.84.36.158:/usr/local/tomcat9/webapps/"
         }
     }
  
